@@ -1,32 +1,32 @@
 // Importaciones necesarias para la vista
 import React, { useState, useEffect } from 'react';
 import { Container } from "react-bootstrap";
-import TablaProductos from '../components/producto/TablaProductos';
+import TablaProveedor from '../components/proveedor/TablaProveedor';
 
 // Declaración del componente Clientes
-const Productos = () => {
+const proveedores= () => {
   // Estados para manejar los datos, carga y errores
-  const [listaProductos, setListaProductos] = useState([]); // Almacena los datos de la API
+  const [listaProveedores, setListaProveedores] = useState([]); // Almacena los datos de la API
   const [cargando, setCargando] = useState(true);            // Controla el estado de carga
   const [errorCarga, setErrorCarga] = useState(null);        // Maneja errores de la petición
 
   // Lógica de obtención de datos con useEffect
   useEffect(() => {
-    const obtenerProductos = async () => { // Método renombrado a español
+    const obtenerProveedores = async () => { // Método renombrado a español
       try {
-        const respuesta = await fetch('http://localhost:3000/api/productos');
+        const respuesta = await fetch('http://localhost:3000/api/proveedores');
         if (!respuesta.ok) {
-          throw new Error('Error al cargar los producto');
+          throw new Error('Error al cargar los Proveedor');
         }
         const datos = await respuesta.json();
-        setListaProductos(datos);    // Actualiza el estado con los datos
+        setListaProveedores(datos);    // Actualiza el estado con los datos
         setCargando(false);           // Indica que la carga terminó
       } catch (error) {
         setErrorCarga(error.message); // Guarda el mensaje de error
         setCargando(false);           // Termina la carga aunque haya error
       }
     };
-    obtenerProductos();            // Ejecuta la función al montar el componente
+    obtenerProveedores();            // Ejecuta la función al montar el componente
   }, []);                           // Array vacío para que solo se ejecute una vez
 
   // Renderizado de la vista
@@ -34,11 +34,11 @@ const Productos = () => {
     <>
       <Container className="mt-5">
         <br />
-        <h4>Productos</h4>
+        <h4>proveedor</h4>
 
         {/* Pasa los estados como props al componente TablaClientes */}
-        <TablaProductos 
-          productos={listaProductos} 
+        <TablaProveedor 
+          proveedores={listaProveedores} 
           cargando={cargando} 
           error={errorCarga} 
         />
@@ -48,4 +48,4 @@ const Productos = () => {
 };
 
 // Exportación del componente
-export default Productos;
+export default proveedores;

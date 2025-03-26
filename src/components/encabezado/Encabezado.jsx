@@ -106,11 +106,29 @@ const Encabezado = () => {
 
             {/* Opción de navegación a Productos */}
              <Nav.Link
-                onClick={() => navegarA("/Producto")}
+                onClick={() => navegarA("/Productos")}
                 className={estaColapsado ? "text-black" : "text-white"}
               >
                 {estaColapsado ? <i className="bi-house-door-fill me-2"></i> : null}
                 <strong>Productos</strong>
+              </Nav.Link>
+
+                {/* Opción de navegación a Proveedores */}
+             <Nav.Link
+                onClick={() => navegarA("/proveedores")}
+                className={estaColapsado ? "text-black" : "text-white"}
+              >
+                {estaColapsado ? <i className="bi-house-door-fill me-2"></i> : null}
+                <strong>Proveedores</strong>
+              </Nav.Link>
+
+                 {/* Opción de navegación a Proveedores */}
+             <Nav.Link
+                onClick={() => navegarA("/compras")}
+                className={estaColapsado ? "text-black" : "text-white"}
+              >
+                {estaColapsado ? <i className="bi-house-door-fill me-2"></i> : null}
+                <strong>Compras</strong>
               </Nav.Link>
 
               {/* Lógica condicional para mostrar Cerrar Sesión o Iniciar Sesión */}

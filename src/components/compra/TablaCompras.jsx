@@ -3,14 +3,12 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// Declaración del componente TablaMarcas que recibe props
 const TablaCompras = ({ compras, cargando, error }) => {
-  // Renderizado condicional según el estado recibido por props
   if (cargando) {
     return <div>Cargando compras...</div>; // Muestra mensaje mientras carga
   }
   if (error) {
-    return <div>Error: {error}</div>;         // Muestra error si ocurre
+    return <div>Error: {error}</div>;     // Muestra error si ocurre
   }
 
   // Renderizado de la tabla con los datos recibidos
@@ -18,21 +16,27 @@ const TablaCompras = ({ compras, cargando, error }) => {
     <Table striped bordered hover responsive>
       <thead>
         <tr>
-          <th>id_compra</th>
-          <th>fecha_compra</th>
-          <th>id_proveedor</th>
-        
-
+          <th>ID Compra</th>
+          <th>ID Detalle Compra</th>
+          <th>Fecha Compra</th>
+          <th>Proveedor</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Subtotal</th>
         </tr>
       </thead>
       <tbody>
         {compras.map((compra) => (
-          <tr key={compra.id_compra}>
-             <td>{compra.id_compra}</td>
+          <tr key={`${compra.id_compra}-${compra.id_detalle_compra}`}> {/* Clave única combinada */}
+            <td>{compra.id_compra}</td>
+            <td>{compra.id_detalle_compra}</td>
             <td>{compra.fecha_compra}</td>
-            <td>{compra.id_proveedor}</td>
-           
-            
+            <td>{compra.nombre_proveedor}</td>
+            <td>{compra.nombre_producto}</td>
+            <td>{compra.cantidad}</td>
+            <td>C$ {compra.precio_unitario.toFixed(2)}</td>
+            <td>C$ {compra.subtotal.toFixed(2)}</td>
           </tr>
         ))}
       </tbody>

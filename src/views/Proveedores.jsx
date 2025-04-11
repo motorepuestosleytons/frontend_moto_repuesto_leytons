@@ -1,7 +1,8 @@
 // Importaciones necesarias para la vista
 import React, { useState, useEffect } from 'react';
-import { Container, Button } from "react-bootstrap";
+import { Container, Button,  Row, Col  } from "react-bootstrap";
 import TablaProveedor from '../components/proveedor/TablaProveedor';
+import CuadroBusquedas from '../components/busquedas/CuadroBusquedas'; // Componente para búsqueda
 import ModalRegistroProveedor from '../components/proveedor/ModalRegistroProveedor';
 
 // Declaración del componente Proveedores
@@ -17,6 +18,11 @@ const Proveedores = () => {
     telefono: '',
     empresa: '',
   }); // Estado para el nuevo proveedor con todos los campos
+    const [proveedoresFiltrados, setProveedoresFiltrados] = useState([]); // Almacena los clientes filtrados
+    const [textoBusqueda, setTextoBusqueda] = useState(""); // Almacena el texto de búsqueda
+    const [paginaActual, establecerPaginaActual] = useState(1); // Página actual para paginación
+    const elementosPorPagina = 3; // Número de elementos por página
+  
 
   // Lógica de obtención de datos con useEffect
   const obtenerProveedores = async () => {
@@ -26,7 +32,8 @@ const Proveedores = () => {
         throw new Error('Error al cargar los proveedores');
       }
       const datos = await respuesta.json();
-      setListaProveedores(datos);    // Actualiza el estado con los datos
+      setListaProveedores(datos); 
+      setProveedoresFiltrados(datos); // Actualiza el estado con los datos
       setCargando(false);           // Indica que la carga terminó
     } catch (error) {
       setErrorCarga(error.message); // Guarda el mensaje de error
@@ -90,6 +97,28 @@ const Proveedores = () => {
     }); // Resetea el formulario
   };
 
+    // Maneja los cambios en el cuadro de búsqueda
+    const manejarCambioBusqueda = (e) => {
+      const texto = e.target.value.toLowerCase();
+      setTextoBusqueda(texto);
+      establecerPaginaActual(1); // Reinicia la paginación al buscar
+  
+      const filtrados = listaProveedores.filter(
+        (proveedor) =>
+          proveedor.nombre_proveedor.toLowerCase().includes(texto) ||
+          proveedor.telefono.toLowerCase().includes(texto) ||
+          proveedor.empresa.toLowerCase().includes(texto) 
+      );
+      setProveedoresFiltrados(filtrados);
+    };
+  
+    // Calcular elementos paginados
+    const proveedoresPaginados = proveedoresFiltrados.slice(
+      (paginaActual - 1) * elementosPorPagina,
+      paginaActual * elementosPorPagina
+    );
+  
+
   // Renderizado de la vista
   return (
     <>
@@ -97,17 +126,36 @@ const Proveedores = () => {
         <br />
         <h4>Proveedores</h4>
 
-        <Button variant="primary" onClick={() => setMostrarModal(true)}>
-          Nuevo Proveedor
-        </Button>
+        <Row>
+          <Col lg={2} md={4} sm={4} xs={5}>
+            <Button
+              variant="primary"
+              onClick={() => setMostrarModal(true)}
+              style={{ width: "100%" }}
+            >
+              Nuevo Proveedor
+            </Button>
+          </Col>
+          <Col lg={5} md={8} sm={8} xs={7}>
+            <CuadroBusquedas
+              textoBusqueda={textoBusqueda}
+              manejarCambioBusqueda={manejarCambioBusqueda}
+            />
+          </Col>
+        </Row>
+
         <br />
         <br />
 
         {/* Pasa los estados como props al componente TablaProveedor */}
         <TablaProveedor 
-          proveedores={listaProveedores} 
+          proveedores={proveedoresPaginados} 
           cargando={cargando} 
           error={errorCarga} 
+          totalElementos={proveedoresFiltrados.length} // Total de elementos filtrados
+          elementosPorPagina={elementosPorPagina} // Elementos por página
+          paginaActual={paginaActual} // Página actual
+          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
         />
 
         {/* Modal para registrar un nuevo proveedor */}

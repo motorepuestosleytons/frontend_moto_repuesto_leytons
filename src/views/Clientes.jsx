@@ -1,30 +1,32 @@
-// Importaciones necesarias para la vista
 import React, { useState, useEffect } from 'react';
-import TablaClientes from '../components/cliente/TablaClientes'; // Componente de tabla para clientes
-import ModalRegistroCliente from '../components/cliente/ModalRegistroClientes'; // Modal para registrar clientes
-import CuadroBusquedas from '../components/busquedas/CuadroBusquedas'; // Componente para búsqueda
+import TablaClientes from '../components/cliente/TablaClientes';
+import ModalRegistroCliente from '../components/cliente/ModalRegistroClientes';
+import ModalEliminacionCliente from '../components/cliente/ModalEliminacionCliente';
+import ModalEdicionCliente from '../components/cliente/ModalEdicionCliente';
+import CuadroBusquedas from '../components/busquedas/CuadroBusquedas';
 import { Container, Button, Row, Col } from "react-bootstrap";
 
-// Declaración del componente Clientes
 const Clientes = () => {
-  // Estados para manejar los datos, carga y errores
-  const [listaClientes, setListaClientes] = useState([]); // Almacena los datos de la API
-  const [cargando, setCargando] = useState(true);        // Controla el estado de carga
-  const [errorCarga, setErrorCarga] = useState(null);    // Maneja errores de la petición de datos
-  const [errorFormulario, setErrorFormulario] = useState(null); // Maneja errores del formulario
-  const [mostrarModal, setMostrarModal] = useState(false); // Controla la visibilidad del modal
+  const [listaClientes, setListaClientes] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [errorCarga, setErrorCarga] = useState(null);
+  const [errorFormulario, setErrorFormulario] = useState(null);
+  const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevoCliente, setNuevoCliente] = useState({
     cedula: '',
     nombre_cliente: '',
     apellido: '',
     telefono: '',
-  }); // Estado para el nuevo cliente con todos los campos
-  const [clientesFiltrados, setClientesFiltrados] = useState([]); // Almacena los clientes filtrados
-  const [textoBusqueda, setTextoBusqueda] = useState(""); // Almacena el texto de búsqueda
-  const [paginaActual, establecerPaginaActual] = useState(1); // Página actual para paginación
-  const elementosPorPagina = 3; // Número de elementos por página
+  });
+  const [mostrarModalEliminacion, setMostrarModalEliminacion] = useState(false);
+  const [clienteAEliminar, setClienteAEliminar] = useState(null);
+  const [clientesFiltrados, setClientesFiltrados] = useState([]);
+  const [textoBusqueda, setTextoBusqueda] = useState("");
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 3;
+  const [clienteEditado, setClienteEditado] = useState(null);
+  const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
 
-  // Lógica de obtención de datos con useEffect
   const obtenerClientes = async () => {
     try {
       const respuesta = await fetch('http://localhost:3000/api/clientes');
@@ -32,31 +34,36 @@ const Clientes = () => {
         throw new Error('Error al cargar los clientes');
       }
       const datos = await respuesta.json();
-      setListaClientes(datos);    // Actualiza el estado con los datos
-      setClientesFiltrados(datos); // Inicializa los clientes filtrados con todos los datos
-      setCargando(false);         // Indica que la carga terminó
+      setListaClientes(datos);
+      setClientesFiltrados(datos);
+      setCargando(false);
     } catch (error) {
-      setErrorCarga(error.message); // Guarda el mensaje de error de carga
-      setCargando(false);         // Termina la carga aunque haya error
+      setErrorCarga(error.message);
+      setCargando(false);
     }
   };
 
   useEffect(() => {
-    obtenerClientes(); // Ejecuta la función al montar el componente
-  }, []); // Array vacío para que solo se ejecute una vez
+    obtenerClientes();
+  }, []);
 
-  // Maneja los cambios en el input del modal
   const manejarCambioInput = (e) => {
     const { name, value } = e.target;
     setNuevoCliente((prev) => ({
       ...prev,
-      [name]: value || '', // Asegura que el valor nunca sea undefined
+      [name]: value || '',
     }));
   };
 
-  // Función para agregar un nuevo cliente
+  const manejarCambioInputEdicion = (e) => {
+    const { name, value } = e.target;
+    setClienteEditado((prev) => ({
+      ...prev,
+      [name]: value || '',
+    }));
+  };
+
   const agregarCliente = async () => {
-    // Validar que los campos requeridos no estén vacíos
     if (!nuevoCliente.cedula || !nuevoCliente.nombre_cliente || !nuevoCliente.apellido || !nuevoCliente.telefono) {
       setErrorFormulario("Por favor, completa todos los campos requeridos.");
       return;
@@ -71,39 +78,39 @@ const Clientes = () => {
         body: JSON.stringify(nuevoCliente),
       });
 
-      if (!respuesta.ok) throw new Error('Error al agregar el cliente');
+      if (!respuesta.ok) {
+        throw new Error('Error al agregar el cliente');
+      }
 
-      await obtenerClientes(); // Refresca la lista de clientes
+      await obtenerClientes();
       setNuevoCliente({
         cedula: '',
         nombre_cliente: '',
         apellido: '',
         telefono: '',
-      }); // Resetea el formulario
-      setMostrarModal(false); // Cierra el modal
-      setErrorFormulario(null); // Limpia el error del formulario
+      });
+      setMostrarModal(false);
+      setErrorFormulario(null);
     } catch (error) {
-      setErrorFormulario(error.message); // Guarda el error del formulario
+      setErrorFormulario(error.message);
     }
   };
 
-  // Limpia el error del formulario al cerrar el modal
   const cerrarModal = () => {
     setMostrarModal(false);
-    setErrorFormulario(null); // Limpia el error del formulario al cerrar
+    setErrorFormulario(null);
     setNuevoCliente({
       cedula: '',
       nombre_cliente: '',
       apellido: '',
       telefono: '',
-    }); // Resetea el formulario
+    });
   };
 
-  // Maneja los cambios en el cuadro de búsqueda
   const manejarCambioBusqueda = (e) => {
     const texto = e.target.value.toLowerCase();
     setTextoBusqueda(texto);
-    establecerPaginaActual(1); // Reinicia la paginación al buscar
+    establecerPaginaActual(1);
 
     const filtrados = listaClientes.filter(
       (cliente) =>
@@ -115,13 +122,76 @@ const Clientes = () => {
     setClientesFiltrados(filtrados);
   };
 
-  // Calcular elementos paginados
+  const eliminarCliente = async () => {
+    if (!clienteAEliminar) return;
+
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/eliminarcliente/${clienteAEliminar.id_cliente}`, {
+        method: 'DELETE',
+      });
+
+      if (!respuesta.ok) {
+        throw new Error('Error al eliminar el cliente');
+      }
+
+      await obtenerClientes();
+      setMostrarModalEliminacion(false);
+      establecerPaginaActual(1);
+      setClienteAEliminar(null);
+      setErrorCarga(null);
+    } catch (error) {
+      setErrorCarga(error.message);
+    }
+  };
+
+  const abrirModalEliminacion = (cliente) => {
+    setClienteAEliminar(cliente);
+    setMostrarModalEliminacion(true);
+  };
+
+  const abrirModalEdicion = (cliente) => {
+    setClienteEditado(cliente);
+    setMostrarModalEdicion(true);
+  };
+
+  const actualizarCliente = async () => {
+    if (!clienteEditado?.cedula || !clienteEditado?.nombre_cliente || !clienteEditado?.apellido || !clienteEditado?.telefono) {
+      setErrorFormulario("Por favor, completa todos los campos antes de guardar.");
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/actualizarcliente/${clienteEditado.id_cliente}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cedula: clienteEditado.cedula,
+          nombre_cliente: clienteEditado.nombre_cliente,
+          apellido: clienteEditado.apellido,
+          telefono: clienteEditado.telefono,
+        }),
+      });
+
+      if (!respuesta.ok) {
+        throw new Error('Error al actualizar el cliente');
+      }
+
+      await obtenerClientes();
+      setMostrarModalEdicion(false);
+      setClienteEditado(null);
+      setErrorFormulario(null);
+    } catch (error) {
+      setErrorFormulario(error.message);
+    }
+  };
+
   const clientesPaginados = clientesFiltrados.slice(
     (paginaActual - 1) * elementosPorPagina,
     paginaActual * elementosPorPagina
   );
 
-  // Renderizado de la vista
   return (
     <>
       <Container className="mt-5">
@@ -149,31 +219,45 @@ const Clientes = () => {
         <br />
         <br />
 
-        {/* Pasa los estados como props al componente TablaClientes */}
         <TablaClientes
           clientes={clientesPaginados}
           cargando={cargando}
           error={errorCarga}
-          totalElementos={clientesFiltrados.length} // Total de elementos filtrados
-          elementosPorPagina={elementosPorPagina} // Elementos por página
-          paginaActual={paginaActual} // Página actual
-          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
+          totalElementos={clientesFiltrados.length}
+          elementosPorPagina={elementosPorPagina}
+          paginaActual={paginaActual}
+          establecerPaginaActual={establecerPaginaActual}
+          abrirModalEliminacion={abrirModalEliminacion}
+          abrirModalEdicion={abrirModalEdicion}
         />
 
-        {/* Modal para registrar un nuevo cliente */}
         <ModalRegistroCliente
           mostrarModal={mostrarModal}
           setMostrarModal={setMostrarModal}
           nuevoCliente={nuevoCliente}
           manejarCambioInput={manejarCambioInput}
           agregarCliente={agregarCliente}
-          errorCarga={errorFormulario} // Pasa el error del formulario al modal
-          cerrarModal={cerrarModal} // Pasa la función para cerrar el modal
+          errorCarga={errorFormulario}
+          cerrarModal={cerrarModal}
+        />
+
+        <ModalEliminacionCliente
+          mostrarModalEliminacion={mostrarModalEliminacion}
+          setMostrarModalEliminacion={setMostrarModalEliminacion}
+          eliminarCliente={eliminarCliente}
+        />
+
+        <ModalEdicionCliente
+          mostrarModalEdicion={mostrarModalEdicion}
+          setMostrarModalEdicion={setMostrarModalEdicion}
+          clienteEditado={clienteEditado}
+          manejarCambioInputEdicion={manejarCambioInputEdicion}
+          actualizarCliente={actualizarCliente}
+          errorCarga={errorFormulario}
         />
       </Container>
     </>
   );
 };
 
-// Exportación del componente
 export default Clientes;

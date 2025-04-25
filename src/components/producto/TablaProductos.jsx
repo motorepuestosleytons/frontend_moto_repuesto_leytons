@@ -1,28 +1,26 @@
-// Importaciones necesarias para el componente visual
 import React from 'react';
-import Paginacion from '../ordenamiento/Paginacion'; // Importamos el componente de paginación
-import { Table } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
+import Paginacion from '../ordenamiento/Paginacion';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// Declaración del componente TablaProductos que recibe props
 const TablaProductos = ({
   productos,
   cargando,
   error,
-  totalElementos,           // Prop para el total de elementos
-  elementosPorPagina,      // Prop para elementos por página
-  paginaActual,           // Prop para la página actual
-  establecerPaginaActual  // Prop para actualizar la página
+  totalElementos,
+  elementosPorPagina,
+  paginaActual,
+  establecerPaginaActual,
+  abrirModalEliminacion,
+  abrirModalEdicion
 }) => {
-  // Renderizado condicional según el estado recibido por props
   if (cargando) {
-    return <div>Cargando Producto...</div>; // Muestra mensaje mientras carga
+    return <div>Cargando Producto...</div>;
   }
   if (error) {
-    return <div>Error: {error}</div>;         // Muestra error si ocurre
+    return <div>Error: {error}</div>;
   }
 
-  // Renderizado de la tabla con los datos recibidos
   return (
     <>
       <Table striped bordered hover responsive>
@@ -35,6 +33,7 @@ const TablaProductos = ({
             <th>precio_compra</th>
             <th>stock</th>
             <th>id_marca</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -47,6 +46,23 @@ const TablaProductos = ({
               <td>{producto.precio_compra}</td>
               <td>{producto.stock}</td>
               <td>{producto.id_marca}</td>
+              <td>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => abrirModalEliminacion(producto)}
+                >
+                  <i className="bi bi-trash"></i>
+                </Button>
+                <Button
+                  variant="outline-warning"
+                  size="sm"
+                  onClick={() => abrirModalEdicion(producto)}
+                >
+                  <i className="bi bi-pencil"></i>
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -61,5 +77,4 @@ const TablaProductos = ({
   );
 };
 
-// Exportación del componente
 export default TablaProductos;

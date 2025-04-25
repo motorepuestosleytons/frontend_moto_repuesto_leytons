@@ -1,38 +1,37 @@
-// Importaciones necesarias para el componente visual
 import React from 'react';
-import Paginacion from '../ordenamiento/Paginacion'; // Importamos el componente de paginación
-import { Table } from 'react-bootstrap';
+import Paginacion from '../ordenamiento/Paginacion';
+import { Table, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// Declaración del componente TablaClientes que recibe props
 const TablaClientes = ({
   clientes,
   cargando,
   error,
-  totalElementos,           // Nuevo prop para el total de elementos
-  elementosPorPagina,      // Nuevo prop para elementos por página
-  paginaActual,           // Nuevo prop para la página actual
-  establecerPaginaActual  // Nuevo prop para actualizar la página
+  totalElementos,
+  elementosPorPagina,
+  paginaActual,
+  establecerPaginaActual,
+  abrirModalEliminacion,
+  abrirModalEdicion
 }) => {
-  // Renderizado condicional según el estado recibido por props
   if (cargando) {
-    return <div>Cargando clientes...</div>; // Muestra mensaje mientras carga
+    return <div>Cargando clientes...</div>;
   }
   if (error) {
-    return <div>Error: {error}</div>;         // Muestra error si ocurre
+    return <div>Error: {error}</div>;
   }
 
-  // Renderizado de la tabla con los datos recibidos
   return (
     <>
       <Table striped bordered hover responsive>
         <thead>
           <tr>
-            <th>id_cliente</th>
-            <th>cedula</th>
-            <th>nombre_cliente</th>
-            <th>apellido</th>
-            <th>telefono</th>
+            <th>ID Cliente</th>
+            <th>Cédula</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -43,6 +42,23 @@ const TablaClientes = ({
               <td>{cliente.nombre_cliente}</td>
               <td>{cliente.apellido}</td>
               <td>{cliente.telefono}</td>
+              <td>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => abrirModalEliminacion(cliente)}
+                >
+                  <i className="bi bi-trash"></i>
+                </Button>
+                <Button
+                  variant="outline-warning"
+                  size="sm"
+                  onClick={() => abrirModalEdicion(cliente)}
+                >
+                  <i className="bi bi-pencil"></i>
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -57,5 +73,4 @@ const TablaClientes = ({
   );
 };
 
-// Exportación del componente
 export default TablaClientes;

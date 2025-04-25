@@ -1,26 +1,27 @@
-// Importaciones necesarias para la vista
 import React, { useState, useEffect } from 'react';
-import TablaMarcas from '../components/marca/TablaMarcas'; // Componente de tabla para marcas
-import ModalRegistroMarca from '../components/marca/ModalRegistroMarca'; // Modal para registrar marcas
-import CuadroBusquedas from '../components/busquedas/CuadroBusquedas'; // Componente para búsqueda (corregido)
-import Paginacion from '../components/ordenamiento/Paginacion';
+import TablaMarcas from '../components/marca/TablaMarcas';
+import ModalRegistroMarca from '../components/marca/ModalRegistroMarca';
+import ModalEliminacionMarca from '../components/marca/ModalEliminacionMarca';
+import ModalEdicionMarca from '../components/marca/ModalEdicionMarca';
+import CuadroBusquedas from '../components/busquedas/CuadroBusquedas';
 import { Container, Button, Row, Col } from "react-bootstrap";
 
-// Declaración del componente Marcas
 const Marcas = () => {
-  // Estados para manejar los datos, carga y errores
-  const [listaMarcas, setListaMarcas] = useState([]); // Almacena los datos de la API
-  const [cargando, setCargando] = useState(true);     // Controla el estado de carga
-  const [errorCarga, setErrorCarga] = useState(null); // Maneja errores de la petición
-  const [errorFormulario, setErrorFormulario] = useState(null); // Maneja errores del formulario
-  const [mostrarModal, setMostrarModal] = useState(false); // Controla la visibilidad del modal
-  const [nuevaMarca, setNuevaMarca] = useState({ marca: '' }); // Estado para la nueva marca
-  const [marcasFiltradas, setMarcasFiltradas] = useState([]); // Almacena las marcas filtradas
-  const [textoBusqueda, setTextoBusqueda] = useState(""); // Almacena el texto de búsqueda
-  const [paginaActual, establecerPaginaActual] = useState(1); // Página actual para paginación
-  const elementosPorPagina = 3; // Número de elementos por página
+  const [listaMarcas, setListaMarcas] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [errorCarga, setErrorCarga] = useState(null);
+  const [errorFormulario, setErrorFormulario] = useState(null);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [nuevaMarca, setNuevaMarca] = useState({ marca: '' });
+  const [mostrarModalEliminacion, setMostrarModalEliminacion] = useState(false);
+  const [marcaAEliminar, setMarcaAEliminar] = useState(null);
+  const [marcasFiltradas, setMarcasFiltradas] = useState([]);
+  const [textoBusqueda, setTextoBusqueda] = useState("");
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 3;
+  const [marcaEditada, setMarcaEditada] = useState(null);
+  const [mostrarModalEdicion, setMostrarModalEdicion] = useState (false);
 
-  // Lógica de obtención de datos con useEffect
   const obtenerMarcas = async () => {
     try {
       const respuesta = await fetch('http://localhost:3000/api/marcas');
@@ -28,31 +29,36 @@ const Marcas = () => {
         throw new Error('Error al cargar las marcas');
       }
       const datos = await respuesta.json();
-      setListaMarcas(datos);    // Actualiza el estado con los datos
-      setMarcasFiltradas(datos); // Inicializa las marcas filtradas con todos los datos
-      setCargando(false);       // Indica que la carga terminó
+      setListaMarcas(datos);
+      setMarcasFiltradas(datos);
+      setCargando(false);
     } catch (error) {
-      setErrorCarga(error.message); // Guarda el mensaje de error
-      setCargando(false);       // Termina la carga aunque haya error
+      setErrorCarga(error.message);
+      setCargando(false);
     }
   };
 
   useEffect(() => {
-    obtenerMarcas(); // Ejecuta la función al montar el componente
-  }, []); // Array vacío para que solo se ejecute una vez
+    obtenerMarcas();
+  }, []);
 
-  // Maneja los cambios en el input del modal
   const manejarCambioInput = (e) => {
     const { name, value } = e.target;
     setNuevaMarca((prev) => ({
       ...prev,
-      [name]: value || '', // Asegura que el valor nunca sea undefined
+      [name]: value || '',
     }));
   };
 
-  // Función para agregar una nueva marca
+  const manejarCambioInputEdicion = (e) => {
+    const { name, value } = e.target;
+    setMarcaEditada((prev) => ({
+      ...prev,
+      [name]: value || '',
+    }));
+  };
+
   const agregarMarca = async () => {
-    // Validar que el campo requerido no esté vacío
     if (!nuevaMarca.marca) {
       setErrorFormulario("Por favor, completa el nombre de la marca.");
       return;
@@ -67,29 +73,29 @@ const Marcas = () => {
         body: JSON.stringify(nuevaMarca),
       });
 
-      if (!respuesta.ok) throw new Error('Error al agregar la marca');
+      if (!respuesta.ok) {
+        throw new Error('Error al agregar la marca');
+      }
 
-      await obtenerMarcas(); // Refresca la lista de marcas
-      setNuevaMarca({ marca: '' }); // Resetea el formulario
-      setMostrarModal(false); // Cierra el modal
-      setErrorFormulario(null); // Limpia el error del formulario
+      await obtenerMarcas();
+      setNuevaMarca({ marca: '' });
+      setMostrarModal(false);
+      setErrorFormulario(null);
     } catch (error) {
-      setErrorFormulario(error.message); // Guarda el error del formulario
+      setErrorFormulario(error.message);
     }
   };
 
-  // Limpia el error del formulario y resetea los campos al cerrar el modal
   const cerrarModal = () => {
     setMostrarModal(false);
-    setErrorFormulario(null); // Limpia el error del formulario
-    setNuevaMarca({ marca: '' }); // Resetea el formulario
+    setErrorFormulario(null);
+    setNuevaMarca({ marca: '' });
   };
 
-  // Maneja los cambios en el cuadro de búsqueda
   const manejarCambioBusqueda = (e) => {
     const texto = e.target.value.toLowerCase();
     setTextoBusqueda(texto);
-    establecerPaginaActual(1); // Reinicia la paginación al buscar
+    establecerPaginaActual(1);
 
     const filtradas = listaMarcas.filter(
       (marca) => marca.marca.toLowerCase().includes(texto)
@@ -97,13 +103,73 @@ const Marcas = () => {
     setMarcasFiltradas(filtradas);
   };
 
-  // Calcular elementos paginados
+  const eliminarMarca = async () => {
+    if (!marcaAEliminar) return;
+
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/eliminarmarca/${marcaAEliminar.id_marca}`, {
+        method: 'DELETE',
+      });
+
+      if (!respuesta.ok) {
+        throw new Error('Error al eliminar la marca');
+      }
+
+      await obtenerMarcas();
+      setMostrarModalEliminacion(false);
+      establecerPaginaActual(1);
+      setMarcaAEliminar(null);
+      setErrorCarga(null);
+    } catch (error) {
+      setErrorCarga(error.message);
+    }
+  };
+
+  const abrirModalEliminacion = (marca) => {
+    setMarcaAEliminar(marca);
+    setMostrarModalEliminacion(true);
+  };
+
+  const abrirModalEdicion = (marca) => {
+    setMarcaEditada(marca);
+    setMostrarModalEdicion(true);
+  };
+
+  const actualizarMarca = async () => {
+    if (!marcaEditada?.marca) {
+      setErrorFormulario("Por favor, completa el nombre de la marca antes de guardar.");
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/actualizarmarca/${marcaEditada.id_marca}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          marca: marcaEditada.marca,
+        }),
+      });
+
+      if (!respuesta.ok) {
+        throw new Error('Error al actualizar la marca');
+      }
+
+      await obtenerMarcas();
+      setMostrarModalEdicion(false);
+      setMarcaEditada(null);
+      setErrorFormulario(null);
+    } catch (error) {
+      setErrorFormulario(error.message);
+    }
+  };
+
   const marcasPaginadas = marcasFiltradas.slice(
     (paginaActual - 1) * elementosPorPagina,
     paginaActual * elementosPorPagina
   );
 
-  // Renderizado de la vista
   return (
     <>
       <Container className="mt-5">
@@ -131,31 +197,45 @@ const Marcas = () => {
         <br />
         <br />
 
-        {/* Pasa los estados como props al componente TablaMarcas */}
         <TablaMarcas
           marcas={marcasPaginadas}
           cargando={cargando}
           error={errorCarga}
-          totalElementos={marcasFiltradas.length} // Total de elementos filtrados
-          elementosPorPagina={elementosPorPagina} // Elementos por página
-          paginaActual={paginaActual} // Página actual
-          establecerPaginaActual={establecerPaginaActual} // Método para cambiar página
+          totalElementos={marcasFiltradas.length}
+          elementosPorPagina={elementosPorPagina}
+          paginaActual={paginaActual}
+          establecerPaginaActual={establecerPaginaActual}
+          abrirModalEliminacion={abrirModalEliminacion}
+          abrirModalEdicion={abrirModalEdicion}
         />
 
-        {/* Modal para registrar una nueva marca */}
         <ModalRegistroMarca
           mostrarModal={mostrarModal}
           setMostrarModal={setMostrarModal}
           nuevaMarca={nuevaMarca}
           manejarCambioInput={manejarCambioInput}
           agregarMarca={agregarMarca}
-          errorCarga={errorFormulario} // Pasa el error del formulario
-          cerrarModal={cerrarModal} // Pasa la función para cerrar el modal
+          errorCarga={errorFormulario}
+          cerrarModal={cerrarModal}
+        />
+
+        <ModalEliminacionMarca
+          mostrarModalEliminacion={mostrarModalEliminacion}
+          setMostrarModalEliminacion={setMostrarModalEliminacion}
+          eliminarMarca={eliminarMarca}
+        />
+
+        <ModalEdicionMarca
+          mostrarModalEdicion={mostrarModalEdicion}
+          setMostrarModalEdicion={setMostrarModalEdicion}
+          marcaEditada={marcaEditada}
+          manejarCambioInputEdicion={manejarCambioInputEdicion}
+          actualizarMarca={actualizarMarca}
+          errorCarga={errorFormulario}
         />
       </Container>
     </>
   );
 };
 
-// Exportación del componente
 export default Marcas;

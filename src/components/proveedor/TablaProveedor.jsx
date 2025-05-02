@@ -1,36 +1,36 @@
-  // Importaciones necesarias para el componente visual
-  import React from 'react';
-  import { Table } from 'react-bootstrap';
-  import 'bootstrap/dist/css/bootstrap.min.css';
-  import Paginacion from '../ordenamiento/Paginacion'; // Importamos el componente de paginación
+import React from 'react';
+import Paginacion from '../ordenamiento/Paginacion';
+import { Table, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-  // Declaración del componente TablaClientes que recibe props
-  const TablaProveedor = ({ 
+const TablaProveedor = ({
   proveedores,
-  cargando, 
+  cargando,
   error,
-  totalElementos,           // Nuevo prop para el total de elementos
-  elementosPorPagina,      // Nuevo prop para elementos por página
-  paginaActual,           // Nuevo prop para la página actual
-  establecerPaginaActual  }) => {
-    // Renderizado condicional según el estado recibido por props
-    if (cargando) {
-      return <div>Cargando Proveedor...</div>; // Muestra mensaje mientras carga
-    }
-    if (error) {
-      return <div>Error: {error}</div>;         // Muestra error si ocurre
-    }
+  totalElementos,
+  elementosPorPagina,
+  paginaActual,
+  establecerPaginaActual,
+  abrirModalEliminacion,
+  abrirModalEdicion
+}) => {
+  if (cargando) {
+    return <div>Cargando proveedores...</div>;
+  }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
-    // Renderizado de la tabla con los datos recibidos
-    return (
+  return (
     <>
       <Table striped bordered hover responsive>
         <thead>
           <tr>
-            <th>id_prov</th>
-            <th>nombre_proveedor</th>
-            <th>telefono</th>
-            <th>empresa</th>
+            <th>ID Proveedor</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Empresa</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -40,11 +40,27 @@
               <td>{proveedor.nombre_proveedor}</td>
               <td>{proveedor.telefono}</td>
               <td>{proveedor.empresa}</td>
+              <td>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => abrirModalEliminacion(proveedor)}
+                >
+                  <i className="bi bi-trash"></i>
+                </Button>
+                <Button
+                  variant="outline-warning"
+                  size="sm"
+                  onClick={() => abrirModalEdicion(proveedor)}
+                >
+                  <i className="bi bi-pencil"></i>
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
       </Table>
-
       <Paginacion
         elementosPorPagina={elementosPorPagina}
         totalElementos={totalElementos}
@@ -52,8 +68,7 @@
         establecerPaginaActual={establecerPaginaActual}
       />
     </>
-    );
-  };
+  );
+};
 
-  // Exportación del componente
-  export default TablaProveedor;
+export default TablaProveedor;

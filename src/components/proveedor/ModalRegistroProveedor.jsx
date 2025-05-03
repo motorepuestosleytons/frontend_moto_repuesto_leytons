@@ -36,8 +36,8 @@ const ModalRegistroProveedor = ({
               name="telefono"
               value={nuevoProveedor.telefono}
               onChange={manejarCambioInput}
-              placeholder="Ingresa el teléfono (máx. 15 caracteres)"
-              maxLength={15}
+              placeholder="Ingresa el teléfono (máx. 9 caracteres)"
+              maxLength={9}
               required
             />
           </Form.Group>

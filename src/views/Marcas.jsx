@@ -65,7 +65,7 @@ const Marcas = () => {
     }
 
     try {
-      const respuesta = await fetch('http://localhost:3000/api/registrarmarcas', {
+      const respuesta = await fetch('http://localhost:3000/api/registrarmarca', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

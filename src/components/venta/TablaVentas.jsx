@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, Button, Collapse } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalEliminacion }) => {
+const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalEliminacion, abrirModalActualizacion }) => {
   const [detalles, setDetalles] = useState({});
   const [detallesCargando, setDetallesCargando] = useState(false);
   const [detallesError, setDetallesError] = useState(null);
@@ -12,7 +12,7 @@ const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalElimi
     setDetallesCargando(true);
     setDetallesError(null);
     try {
-      const datosDetalles = await obtenerDetalles(id_venta); // Suponiendo que devuelve un array de detalles
+      const datosDetalles = await obtenerDetalles(id_venta); // Llama a obtenerDetalles, que abre el modal
       setDetalles((prev) => ({ ...prev, [id_venta]: datosDetalles }));
     } catch (err) {
       setDetallesError('Error al cargar los detalles');
@@ -35,7 +35,6 @@ const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalElimi
           <th>ID Venta</th>
           <th>Fecha Venta</th>
           <th>Cliente</th>
-          <th>Total</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -46,7 +45,6 @@ const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalElimi
               <td>{venta.id_venta}</td>
               <td>{venta.fecha_venta}</td>
               <td>{venta.nombre_cliente}</td>
-              <td>C$ {venta.total_venta.toFixed(2)}</td>
               <td>
                 <Button
                   variant="outline-success"
@@ -59,16 +57,24 @@ const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalElimi
                 <Button
                   variant="outline-danger"
                   size="sm"
+                  className="me-2"
                   onClick={() => abrirModalEliminacion(venta)}
                 >
                   <i className="bi bi-trash"></i>
                 </Button>
+                <Button
+                  variant="outline-warning"
+                  size="sm"
+                  onClick={() => abrirModalActualizacion(venta)}
+                >
+                  <i className="bi bi-pencil"></i>
+                </Button>
               </td>
             </tr>
-            {/* Subtabla para detalles de la venta */}
+            {/* Subtabla para detalles de la venta (mantenida por compatibilidad, pero redundante con ModalDetallesVenta) */}
             {detalles[venta.id_venta] && (
               <tr>
-                <td colSpan="6">
+                <td colSpan="4">
                   <Collapse in={!!detalles[venta.id_venta]}>
                     <div>
                       {detallesCargando && <div>Cargando detalles...</div>}
@@ -88,7 +94,7 @@ const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalElimi
                             {detalles[venta.id_venta].map((detalle) => (
                               <tr key={detalle.id_detalle_venta}>
                                 <td>{detalle.id_detalle_venta}</td>
-                                <td>{detalle.id_producto}</td>
+                                <td>{detalle.nombre_producto || detalle.id_producto}</td>
                                 <td>{detalle.cantidad}</td>
                                 <td>C$ {detalle.precio_unitario.toFixed(2)}</td>
                                 <td>C$ {detalle.total.toFixed(2)}</td>

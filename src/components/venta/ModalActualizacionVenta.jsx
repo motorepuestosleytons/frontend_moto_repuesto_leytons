@@ -18,7 +18,8 @@ const ModalActualizacionVenta = ({
   const [ventaActualizada, setVentaActualizada] = useState({
     id_venta: venta?.id_venta || '',
     id_cliente: venta?.id_cliente || '',
-    fecha_venta: venta?.fecha_venta ? new Date(venta.fecha_venta) : new Date()
+    fecha_venta: venta?.fecha_venta ? new Date(venta.fecha_venta) : new Date(),
+    total_venta: venta?.total_venta || 0
   });
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
@@ -30,21 +31,13 @@ const ModalActualizacionVenta = ({
 
   useEffect(() => {
     if (venta && clientes.length > 0) {
-      const cliente = clientes.find(c => c.id_cliente === parseInt(venta.id_cliente));
-      if (cliente) {
-        setClienteSeleccionado({ value: cliente.id_cliente, label: `${cliente.nombre_cliente} ${cliente.apellido}` });
-        setVentaActualizada(prev => ({ ...prev, id_cliente: cliente.id_cliente }));
-      }
-      let fechaParsed = new Date(venta.fecha_venta);
-      if (isNaN(fechaParsed) && typeof venta.fecha_venta === 'string') {
-        const [day, month, year] = venta.fecha_venta.split('/');
-        fechaParsed = new Date(`${year}-${month}-${day}`);
-      }
-      setVentaActualizada(prev => ({
-        ...prev,
+      setClienteSeleccionado({ value: venta.id_cliente, label: venta.nombre_cliente });
+      setVentaActualizada({
         id_venta: venta.id_venta || '',
-        fecha_venta: isNaN(fechaParsed) ? new Date() : fechaParsed
-      }));
+        id_cliente: venta.id_cliente || '',
+        fecha_venta: venta?.fecha_venta ? new Date(venta.fecha_venta) : new Date(),
+        total_venta: parseFloat(venta.total_venta) || 0
+      });
     }
   }, [venta, clientes]);
 
@@ -175,7 +168,7 @@ const ModalActualizacionVenta = ({
       <Modal.Body>
         <Form>
           <Row>
-            <Col xs={12} sm={12} md={6} lg={6}>
+            <Col xs={12} sm={12} md={4} lg={4}>
               <Form.Group className="mb-3" controlId="formCliente">
                 <Form.Label>Cliente</Form.Label>
                 <AsyncSelect
@@ -189,7 +182,7 @@ const ModalActualizacionVenta = ({
                 />
               </Form.Group>
             </Col>
-            <Col xs={12} sm={12} md={6} lg={6}>
+            <Col xs={12} sm={12} md={4} lg={4}>
               <Form.Group className="mb-3" controlId="formFechaVenta">
                 <Form.Label>Fecha de Venta</Form.Label>
                 <br />

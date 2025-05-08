@@ -8,6 +8,11 @@ const LoginForm = ({ email, password, error, setEmail, setPassword, manejarEnvio
       <Col md={6} lg={5} xl={4}>
         <Card className="p-4 shadow-lg">
           <Card.Body>
+            <img
+              src="/Logo_Moto_Repuestos.png"
+              alt="Moto Repuestos Leyton"
+              style={{ width: "100%", maxWidth: "200px", marginBottom: "20px", display: "block", marginLeft: "auto", marginRight: "auto" }}
+            />
             <h3 className="text-center mb-4">Iniciar Sesión</h3>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={manejarEnvio}>

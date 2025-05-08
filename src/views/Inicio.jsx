@@ -24,8 +24,8 @@ const Inicio = () => {
   return (
     <Container>
       <h1>¡Bienvenido, {nombreUsuario}!</h1>
-      <p>Estás en la página de inicio.</p>
-      <p>Estás es mi aplicacion web.</p>
+      <p>Bienvenidos a Moto Repuestos Leyton </p>
+      <p>"Tu moto en marcha, con repuestos de confianza"</p>
       <button onClick={cerrarSesion}>Cerrar Sesión</button>
     </Container>
   );

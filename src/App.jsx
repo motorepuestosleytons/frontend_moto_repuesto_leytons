@@ -9,6 +9,7 @@ import Marcas from "./views/Marcas";
 import Proveedores from "./views/Proveedores";
 import Compras from "./views/Compras";
 import Ventas from "./views/Ventas";
+import CatalogoProductos from "./views/CatalogoProductos";
 import './App.css';
 
 const App = () => {
@@ -26,6 +27,8 @@ const App = () => {
         <Route path="/proveedores" element={<Proveedores/>} />
         <Route path="/compras" element={<Compras/>} />
         <Route path="/ventas" element={<Ventas/>} />
+        <Route path="/CatalogoProductos" element={<CatalogoProductos/>} />
+
 
 
 

@@ -33,6 +33,7 @@ const TablaProductos = ({
             <th>precio_compra</th>
             <th>stock</th>
             <th>id_marca</th>
+             <th>imagen</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -46,6 +47,16 @@ const TablaProductos = ({
               <td>{producto.precio_compra}</td>
               <td>{producto.stock}</td>
               <td>{producto.id_marca}</td>
+               <td>{producto.imagen ? (
+    <img
+      src={`data:image/png;base64,${producto.imagen}`}
+                  alt={producto.nombre_producto}
+                  style={{ maxWidth: '100px' }}
+                />
+              ) : (
+                'Sin imagen'
+              )}
+            </td>
               <td>
                 <Button
                   variant="outline-danger"

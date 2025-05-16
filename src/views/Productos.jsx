@@ -24,7 +24,7 @@ const Productos = () => {
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
   const [paginaActual, establecerPaginaActual] = useState(1);
-  const elementosPorPagina = 3;
+  const elementosPorPagina = 20;
   const [mostrarModalEliminacion, setMostrarModalEliminacion] = useState(false);
   const [productoAEliminar, setProductoAEliminar] = useState(null);
   const [productoEditado, setProductoEditado] = useState(null);
@@ -81,66 +81,69 @@ const Productos = () => {
   };
 
   const agregarProducto = async () => {
-    if (
-      !nuevoProducto.nombre_ ||
-      !nuevoProducto.modelo ||
-      !nuevoProducto.precio_venta ||
-      !nuevoProducto.precio_compra ||
-      !nuevoProducto.stock ||
-      !nuevoProducto.id_marca
-    ) {
-      setErrorFormulario("Por favor, completa todos los campos requeridos.");
-      return;
+  if (
+    !nuevoProducto.nombre_ ||
+    !nuevoProducto.modelo ||
+    !nuevoProducto.precio_venta ||
+    !nuevoProducto.precio_compra ||
+    !nuevoProducto.stock ||
+    !nuevoProducto.id_marca
+  ) {
+    setErrorFormulario("Por favor, completa todos los campos requeridos.");
+    return;
+  }
+
+  if (
+    isNaN(nuevoProducto.precio_venta) ||
+    isNaN(nuevoProducto.precio_compra) ||
+    isNaN(nuevoProducto.stock) ||
+    isNaN(nuevoProducto.id_marca)
+  ) {
+    setErrorFormulario("Los campos precio_venta, precio_compra, stock e id_marca deben ser numéricos.");
+    return;
+  }
+
+  try {
+    const productoParaEnviar = {
+      nombre_: nuevoProducto.nombre_,
+      modelo: nuevoProducto.modelo,
+      precio_venta: Number(nuevoProducto.precio_venta),
+      precio_compra: Number(nuevoProducto.precio_compra),
+      stock: parseInt(nuevoProducto.stock, 10),
+      id_marca: parseInt(nuevoProducto.id_marca, 10),
+      imagen: nuevoProducto.imagen || ''  // Agregamos imagen aquí
+    };
+
+    const respuesta = await fetch('http://localhost:3000/api/registrarproducto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productoParaEnviar),
+    });
+
+    if (!respuesta.ok) {
+      const errorData = await respuesta.json();
+      throw new Error(errorData.mensaje || 'Error al agregar el producto');
     }
 
-    if (
-      isNaN(nuevoProducto.precio_venta) ||
-      isNaN(nuevoProducto.precio_compra) ||
-      isNaN(nuevoProducto.stock) ||
-      isNaN(nuevoProducto.id_marca)
-    ) {
-      setErrorFormulario("Los campos precio_venta, precio_compra, stock e id_marca deben ser numéricos.");
-      return;
-    }
+    await obtenerProductos();
+    setNuevoProducto({
+      nombre_: '',
+      modelo: '',
+      precio_venta: '',
+      precio_compra: '',
+      stock: '',
+      id_marca: '',
+      imagen: ''  // Limpiamos también el campo imagen
+    });
+    setMostrarModal(false);
+    setErrorFormulario(null);
+  } catch (error) {
+    setErrorFormulario(error.message);
+  }
+};
 
-    try {
-      const productoParaEnviar = {
-        nombre_: nuevoProducto.nombre_,
-        modelo: nuevoProducto.modelo,
-        precio_venta: Number(nuevoProducto.precio_venta),
-        precio_compra: Number(nuevoProducto.precio_compra),
-        stock: parseInt(nuevoProducto.stock, 10),
-        id_marca: parseInt(nuevoProducto.id_marca, 10)
-      };
-
-      const respuesta = await fetch('http://localhost:3000/api/registrarproducto', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productoParaEnviar),
-      });
-
-      if (!respuesta.ok) {
-        const errorData = await respuesta.json();
-        throw new Error(errorData.mensaje || 'Error al agregar el producto');
-      }
-
-      await obtenerProductos();
-      setNuevoProducto({
-        nombre_: '',
-        modelo: '',
-        precio_venta: '',
-        precio_compra: '',
-        stock: '',
-        id_marca: ''
-      });
-      setMostrarModal(false);
-      setErrorFormulario(null);
-    } catch (error) {
-      setErrorFormulario(error.message);
-    }
-  };
 
   const cerrarModal = () => {
     setMostrarModal(false);
@@ -206,59 +209,68 @@ const Productos = () => {
   };
 
   const actualizarProducto = async () => {
-    if (
-      !productoEditado?.nombre_ ||
-      !productoEditado?.modelo ||
-      !productoEditado?.precio_venta ||
-      !productoEditado?.precio_compra ||
-      !productoEditado?.stock ||
-      !productoEditado?.id_marca
-    ) {
-      setErrorFormulario("Por favor, completa todos los campos requeridos.");
-      return;
+  if (
+    !productoEditado?.nombre_ ||
+    !productoEditado?.modelo ||
+    !productoEditado?.precio_venta ||
+    !productoEditado?.precio_compra ||
+    !productoEditado?.stock ||
+    !productoEditado?.id_marca
+  ) {
+    setErrorFormulario("Por favor, completa todos los campos requeridos.");
+    return;
+  }
+
+  if (
+    isNaN(productoEditado.precio_venta) ||
+    isNaN(productoEditado.precio_compra) ||
+    isNaN(productoEditado.stock) ||
+    isNaN(productoEditado.id_marca)
+  ) {
+    setErrorFormulario("Los campos precio_venta, precio_compra, stock e id_marca deben ser numéricos.");
+    return;
+  }
+
+  try {
+    const productoParaEnviar = {
+      nombre_: productoEditado.nombre_,
+      modelo: productoEditado.modelo,
+      precio_venta: Number(productoEditado.precio_venta),
+      precio_compra: Number(productoEditado.precio_compra),
+      stock: parseInt(productoEditado.stock, 10),
+      id_marca: parseInt(productoEditado.id_marca, 10),
+    };
+
+    // Verifica si existe una imagen para enviar
+    if (productoEditado.imagen) {
+      productoParaEnviar.imagen = productoEditado.imagen;
     }
 
-    if (
-      isNaN(productoEditado.precio_venta) ||
-      isNaN(productoEditado.precio_compra) ||
-      isNaN(productoEditado.stock) ||
-      isNaN(productoEditado.id_marca)
-    ) {
-      setErrorFormulario("Los campos precio_venta, precio_compra, stock e id_marca deben ser numéricos.");
-      return;
-    }
-
-    try {
-      const productoParaEnviar = {
-        nombre_: productoEditado.nombre_,
-        modelo: productoEditado.modelo,
-        precio_venta: Number(productoEditado.precio_venta),
-        precio_compra: Number(productoEditado.precio_compra),
-        stock: parseInt(productoEditado.stock, 10),
-        id_marca: parseInt(productoEditado.id_marca, 10)
-      };
-
-      const respuesta = await fetch(`http://localhost:3000/api/actualizarproducto/${productoEditado.id_producto}`, {
+    const respuesta = await fetch(
+      `http://localhost:3000/api/actualizarproducto/${productoEditado.id_producto}`,
+      {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(productoParaEnviar),
-      });
-
-      if (!respuesta.ok) {
-        const errorData = await respuesta.json();
-        throw new Error(errorData.mensaje || 'Error al actualizar el producto');
       }
+    );
 
-      await obtenerProductos();
-      setMostrarModalEdicion(false);
-      setProductoEditado(null);
-      setErrorFormulario(null);
-    } catch (error) {
-      setErrorFormulario(error.message);
+    if (!respuesta.ok) {
+      const errorData = await respuesta.json();
+      throw new Error(errorData.mensaje || 'Error al actualizar el producto');
     }
-  };
+
+    await obtenerProductos();
+    setMostrarModalEdicion(false);
+    setProductoEditado(null);
+    setErrorFormulario(null);
+  } catch (error) {
+    setErrorFormulario(error.message);
+  }
+};
+
 
   const productosPaginados = productosFiltrados.slice(
     (paginaActual - 1) * elementosPorPagina,

@@ -11,7 +11,7 @@ const LoginForm = ({ email, password, error, setEmail, setPassword, manejarEnvio
             <img
               src="/Logo_Moto_Repuestos.png"
               alt="Moto Repuestos Leyton"
-              style={{ width: "100%", maxWidth: "200px", marginBottom: "20px", display: "block", marginLeft: "auto", marginRight: "auto" }}
+              style={{ width: "100%", maxWidth: "100px", marginBottom: "20px", display: "block", marginLeft: "auto", marginRight: "auto" }}
             />
             <h3 className="text-center mb-4">Iniciar Sesión</h3>
             {error && <Alert variant="danger">{error}</Alert>}

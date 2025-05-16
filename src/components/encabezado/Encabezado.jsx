@@ -36,7 +36,7 @@ const Encabezado = () => {
           <img
             alt="Moto Repuestos Leyton"
             src="/Logo_Moto_Repuestos.png"
-            style={{ height: "30px", width: "auto", marginRight: "10px" }}
+            style={{ height: "35px", width: "auto", marginRight: "10px" }}
             className="d-inline-block align-top"
           />
           <strong>Moto Repuestos Leyton</strong>

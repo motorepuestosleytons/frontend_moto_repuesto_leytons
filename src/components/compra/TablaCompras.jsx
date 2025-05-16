@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, Button, Collapse } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const TablaCompras = ({ compras, cargando, error, obtenerDetalles, abrirModalEliminacion }) => {
+const TablaCompras = ({ compras, cargando, error, obtenerDetalles, abrirModalEliminacion, abrirModalActualizacion }) => {
   const [detalles, setDetalles] = useState({});
   const [detallesCargando, setDetallesCargando] = useState(false);
   const [detallesError, setDetallesError] = useState(null);
@@ -59,9 +59,17 @@ const TablaCompras = ({ compras, cargando, error, obtenerDetalles, abrirModalEli
                 <Button
                   variant="outline-danger"
                   size="sm"
+                  className="me-2"
                   onClick={() => abrirModalEliminacion(compra)}
                 >
                   <i className="bi bi-trash"></i>
+                </Button>
+                <Button
+                  variant="outline-warning"
+                  size="sm"
+                  onClick={() => abrirModalActualizacion(compra)}
+                >
+                  <i className="bi bi-pencil"></i>
                 </Button>
               </td>
             </tr>

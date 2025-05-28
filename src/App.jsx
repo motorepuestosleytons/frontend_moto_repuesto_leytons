@@ -10,6 +10,8 @@ import Proveedores from "./views/Proveedores";
 import Compras from "./views/Compras";
 import Ventas from "./views/Ventas";
 import CatalogoProductos from "./views/CatalogoProductos";
+import Dashboard from "./views/Dashboard";
+import Estadisticas from "./views/Estadisdicas";
 import './App.css';
 
 const App = () => {
@@ -28,6 +30,8 @@ const App = () => {
         <Route path="/compras" element={<Compras/>} />
         <Route path="/ventas" element={<Ventas/>} />
         <Route path="/CatalogoProductos" element={<CatalogoProductos/>} />
+        <Route path="/Dashboard" element={<Dashboard/>} />
+        <Route path="/Estadisticas" element={<Estadisticas/>} />
 
 
 

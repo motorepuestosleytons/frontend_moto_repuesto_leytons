@@ -4,6 +4,10 @@ import ModalRegistroProducto from '../components/producto/ModalRegistroProducto'
 import ModalEliminacionProducto from '../components/producto/ModalEliminacionProducto';
 import ModalEdicionProducto from '../components/producto/ModalEdicionProducto';
 import CuadroBusquedas from '../components/busquedas/CuadroBusquedas';
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { Container, Button, Row, Col } from "react-bootstrap";
 
 const Productos = () => {
@@ -277,6 +281,160 @@ const Productos = () => {
     paginaActual * elementosPorPagina
   );
 
+const generarPDFProductos = () => {
+    
+    const doc = new jsPDF();
+
+    // Encabezado del PDF
+    doc.setFillColor(28, 41, 51);
+    doc.rect(0, 0, 220, 30, 'F'); //
+
+    // Titulo centrado con texto blanco
+    doc.setTextColor(255, 255, 255); // Color del titulo
+    doc.setFontSize(28);
+    doc.text("Lista de Productos", doc.internal.pageSize.getWidth() / 2, 18, { align: "center" });
+
+    const columnas = ["ID", "Nombre", "Modelo", "Precio Venta", "Precio Compra", "Stock", "ID Marca"];
+
+    const filas = productosFiltrados.map((producto) => [
+        producto.id_producto,
+        producto.nombre_,
+        producto.modelo,
+        producto.precio_venta,
+        producto.precio_compra,
+        producto.stock,
+        producto.id_marca,
+    ]);
+
+    // Marcador para mostrar el total de paginas
+    const totalPaginas = "{total_pages_count_string}";
+
+    //Configuración de la tabla
+    autoTable(doc, {
+        head: [columnas],
+        body: filas,
+        startY: 40,
+        theme: "grid",
+        styles: { fontSize: 10, cellPadding: 2 },
+        margin: { top: 20, left: 14, right: 14 },
+        tableWidth: "auto", // Ajuste de ancho automatico
+        columnStyles: {
+            0: { cellWidth: 'auto' }, // Ajuste de ancho automatico
+            1: { cellWidth: 'auto' },
+            2: { cellWidth: 'auto' },
+            3: { cellWidth: 'auto' },
+            4: { cellWidth: 'auto' },
+            5: { cellWidth: 'auto' },
+            6: { cellWidth: 'auto' },
+        },
+        pageBreak: "auto",
+        rowPageBreak: "auto",
+        // Hook que se ejecuta al dibujar cada página
+        didDrawPage: function (data) {
+            // Altura y ancho de la página actual
+            const alturaPagina = doc.internal.pageSize.getHeight();
+            const anchoPagina = doc.internal.pageSize.getWidth();
+
+            // Número de página actual
+            const numeroPagina = doc.internal.getNumberOfPages();
+
+            // Definir texto de número de página en el centro del documento
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            const piePagina = `Página ${numeroPagina} de ${totalPaginas}`;
+            doc.text(piePagina, anchoPagina / 2 + 15, alturaPagina - 10, { align: "center" });
+        },
+           });
+
+            // Actualizar el marcador con el total real de páginas
+            if (typeof doc.putTotalPages === 'function') {
+                doc.putTotalPages(totalPaginas);
+            }
+
+            // Guardar el PDF con un nombre basado en la fecha actual
+            const fecha = new Date();
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const anio = fecha.getFullYear();
+            const nombreArchivo = `productos_${dia}${mes}${anio}.pdf`;
+
+            // Actualizar el marcador con el total real de páginas
+            if (typeof doc.putTotalPages === 'function') {
+                doc.putTotalPages(totalPaginas);
+            }
+
+            // Guardar el documento PDF
+            doc.save(nombreArchivo);
+
+            };
+
+        const generarPDFDetalleProducto = (producto) => {
+        const pdf = new jsPDF();
+        const anchoPagina = pdf.internal.pageSize.getWidth();
+
+        // Encabezado
+        pdf.setFillColor(28, 41, 51);
+        pdf.rect(0, 0, 220, 30, 'F');
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(22);
+        pdf.text(producto.nombre_, anchoPagina / 2, 18, { align: "center" });
+
+        let posicionY = 50;
+
+        if (producto.imagen) {
+            const propiedadesImagen = pdf.getImageProperties(producto.imagen);
+            const anchoImagen = 100;
+            const altoImagen = (propiedadesImagen.height * anchoImagen) / propiedadesImagen.width;
+            const posicionX = (anchoPagina - anchoImagen) / 2;
+
+            pdf.addImage(producto.imagen, 'JPEG', posicionX, 40, anchoImagen, altoImagen);
+            posicionY = 40 + altoImagen + 10;
+        }
+
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(14);
+
+        pdf.text(`Modelo: ${producto.modelo}`, anchoPagina / 2, posicionY, { align: "center" });
+        pdf.text(`Marca: ${producto.id_marca}`, anchoPagina / 2, posicionY + 10, { align: "center" });
+        pdf.text(`Precio Venta: C$ ${producto.precio_venta}`, anchoPagina / 2, posicionY + 20, { align: "center" });
+        pdf.text(`Stock: ${producto.stock}`, anchoPagina / 2, posicionY + 30, { align: "center" });
+
+        pdf.save(`${producto.nombre_}.pdf`);
+    };
+           
+         const exportarExcelProductos = () => {
+
+    // Estructura de datos para la hoja Excel
+    const datos = productosFiltrados.map((producto) => ({
+        ID: producto.id_producto,
+        Nombre: producto.nombre_,
+        Modelo: producto.modelo,
+        "Precio Venta": parseFloat(producto.precio_venta),
+        "Precio Compra": parseFloat(producto.precio_compra),
+        Stock: producto.stock,
+        "Id Marca": producto.id_marca
+    }));
+
+    // Crear hoja y libro Excel
+    const hoja = XLSX.utils.json_to_sheet(datos);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Productos");
+
+    // Crear el archivo binario
+    const excelBuffer = XLSX.write(libro, { bookType: 'xlsx', type: 'array' });
+
+    // Guardar el Excel con un nombre basado en la fecha actual
+    const fecha = new Date();
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+
+    const nombreArchivo = `productos_${dia}${mes}${anio}.xlsx`;
+
+    // Guardar archivo con nombre previamente configurado
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, nombreArchivo);
+};
   return (
     <>
       <Container className="mt-5">
@@ -284,7 +442,7 @@ const Productos = () => {
         <h4>Productos</h4>
 
         <Row>
-          <Col lg={2} md={4} sm={4} xs={5}>
+          <Col lg={2} md={2} sm={3} xs={3}>
             <Button
               variant="primary"
               onClick={() => setMostrarModal(true)}
@@ -293,16 +451,36 @@ const Productos = () => {
               Nuevo Producto
             </Button>
           </Col>
-          <Col lg={5} md={8} sm={8} xs={7}>
+          <Col lg={4} md={4} sm={4} xs={4}>
             <CuadroBusquedas
               textoBusqueda={textoBusqueda}
               manejarCambioBusqueda={manejarCambioBusqueda}
             />
           </Col>
-        </Row>
 
-        <br />
-        <br />
+          <Col lg={3} md={4} sm={4} xs={5}>
+          <Button
+            className="mb-3"
+            onClick={() => generarPDFProductos()}
+            variant="secondary"
+            style={{ width: "100%" }}
+          >
+            Generar reporte PDF
+          </Button>
+        </Col>
+
+        <Col lg={3} md={4} sm={4} xs={5}>
+        <Button
+          className="mb-3"
+          onClick={() => exportarExcelProductos()}
+          variant="secondary"
+          style={{ width: "100%" }}
+        >
+          Generar Excel
+        </Button>
+      </Col>
+      
+        </Row>
 
         <TablaProductos
           productos={productosPaginados}
@@ -314,6 +492,7 @@ const Productos = () => {
           establecerPaginaActual={establecerPaginaActual}
           abrirModalEliminacion={abrirModalEliminacion}
           abrirModalEdicion={abrirModalEdicion}
+          generarPDFDetalleProducto={generarPDFDetalleProducto}
         />
 
         <ModalRegistroProducto

@@ -5,15 +5,15 @@ import { useRef } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const VentasPorMes = ({ meses, totales_por_mes }) => {
+const VentasPorMarca = ({ marca, totales_por_marca, cantidadadvendidad }) => {
   const chartRef = useRef(null);
 
   const data = {
-    labels: meses, // Nombres de los meses
+    labels:  marca, // Nombres de las marcas
     datasets: [
       {
-        label: 'VENTAS POR MES', // Total de ventas por mes
-        data: totales_por_mes, // Total de ventas por mes
+        label: 'VENTAS POR MARCA',
+        data: totales_por_marca, cantidadadvendidad,// Total de ventas por marca
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -52,7 +52,7 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
         x: {
           title: {
             display: true,
-            text: ' Meses',
+            text: 'Marcas',
           },
         },
       },
@@ -62,14 +62,12 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
   const generarPDF = () => {
     const doc = new jsPDF();
 
-    // Encabezado
     doc.setFillColor(28, 41, 51);
     doc.rect(0, 0, doc.internal.pageSize.getWidth(), 30, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
-    doc.text("Reporte de Ventas por Mes", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+    doc.text("Reporte de Ventas por Marca", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
 
-    // Capturar gráfico como imagen
     const chartInstance = chartRef.current;
     const chartCanvas = chartInstance?.canvas;
     const chartImage = chartCanvas?.toDataURL("image/png", 1.0);
@@ -78,9 +76,8 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
       doc.addImage(chartImage, "PNG", 14, 40, 180, 100);
     }
 
-    // Tabla de datos
-    const columnas = ["Mes", "Ventas (C$)"];
-    const filas = meses.map((mes, index) => [mes, totales_por_mes[index]]);
+    const columnas = ["Marca", "Ventas (C$)", "Cantidad Vendida"];
+    const filas = marca.map((marca, index) => [marca, totales_por_marca, cantidadadvendidad[index]]);
 
     autoTable(doc, {
       head: [columnas],
@@ -91,20 +88,18 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
       margin: { top: 20, left: 14, right: 14 },
     });
 
-    // Generar un nombre dinámico para el archivo PDF
     const fecha = new Date();
     const dia = String(fecha.getDate()).padStart(2, '0');
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
     const anio = fecha.getFullYear();
-    const nombreArchivo = `VentasPorMes_${dia}${mes}${anio}.pdf`;
+    const nombreArchivo = `VentasPorMarca_${dia}${mes}${anio}.pdf`;
 
-    // Guardar PDF
     doc.save(nombreArchivo);
   };
 
   return (
     <Card style={{ height: '100%' }}>
-      <Card.Title className="text-center">Ventas por Mes</Card.Title>
+      <Card.Title className="text-center">Ventas por Marca</Card.Title>
       <div style={{ height: "300px", justifyContent: "center", alignItems: "center", display: "flex" }}>
         <Bar ref={chartRef} data={data} options={options} />
       </div>
@@ -115,4 +110,4 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
   );
 };
 
-export default VentasPorMes;
+export default VentasPorMarca;

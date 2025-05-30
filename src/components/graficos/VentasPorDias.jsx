@@ -1,19 +1,19 @@
 import { Card, Button } from "react-bootstrap";
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import { useRef } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const VentasPorMes = ({ meses, totales_por_mes }) => {
+const VentasPorDias = ({ dias, totales_por_dias }) => {
   const chartRef = useRef(null);
 
   const data = {
-    labels: meses, // Nombres de los meses
+    labels: dias, // Nombres de los meses
     datasets: [
       {
-        label: 'VENTAS POR MES', // Total de ventas por mes
-        data: totales_por_mes, // Total de ventas por mes
+        label: 'VENTAS POR DIAS', // Total de ventas por mes
+        data: totales_por_dias, // Total de ventas por mes
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -52,7 +52,7 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
         x: {
           title: {
             display: true,
-            text: ' Meses',
+            text: ' Dias',
           },
         },
       },
@@ -67,7 +67,7 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
     doc.rect(0, 0, doc.internal.pageSize.getWidth(), 30, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
-    doc.text("Reporte de Ventas por Mes", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+    doc.text("Reporte de Ventas por Dias", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
 
     // Capturar gráfico como imagen
     const chartInstance = chartRef.current;
@@ -79,8 +79,8 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
     }
 
     // Tabla de datos
-    const columnas = ["Mes", "Ventas (C$)"];
-    const filas = meses.map((mes, index) => [mes, totales_por_mes[index]]);
+    const columnas = ["Dias", "Ventas (C$)"];
+    const filas = dias.map((dia, index) => [dia, totales_por_dias[index]]);
 
     autoTable(doc, {
       head: [columnas],
@@ -96,7 +96,7 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
     const dia = String(fecha.getDate()).padStart(2, '0');
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
     const anio = fecha.getFullYear();
-    const nombreArchivo = `VentasPorMes_${dia}${mes}${anio}.pdf`;
+    const nombreArchivo = `VentasPorDias${dia}${mes}${anio}.pdf`;
 
     // Guardar PDF
     doc.save(nombreArchivo);
@@ -104,9 +104,9 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
 
   return (
     <Card style={{ height: '100%' }}>
-      <Card.Title className="text-center">Ventas por Mes</Card.Title>
+      <Card.Title className="text-center">Ventas por Dias</Card.Title>
       <div style={{ height: "300px", justifyContent: "center", alignItems: "center", display: "flex" }}>
-        <Bar ref={chartRef} data={data} options={options} />
+        <Line ref={chartRef} data={data} options={options} />
       </div>
       <Button className="btn btn-primary mt-3" onClick={generarPDF}>
         Generar Reporte <i className="bi bi-download"></i>
@@ -115,4 +115,4 @@ const VentasPorMes = ({ meses, totales_por_mes }) => {
   );
 };
 
-export default VentasPorMes;
+export default VentasPorDias;

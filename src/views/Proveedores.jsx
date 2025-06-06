@@ -5,6 +5,10 @@ import ModalEliminacionProveedor from '../components/proveedor/ModalEliminacionP
 import ModalEdicionProveedor from '../components/proveedor/ModalEdicionProveedor';
 import CuadroBusquedas from '../components/busquedas/CuadroBusquedas';
 import { Container, Button, Row, Col } from "react-bootstrap";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const Proveedores = () => {
   const [listaProveedores, setListaProveedores] = useState([]);
@@ -187,6 +191,126 @@ const Proveedores = () => {
     paginaActual * elementosPorPagina
   );
 
+// 📄 Generar PDF con la lista de proveedores
+const generarPDFProveedores = () => {
+    const doc = new jsPDF();
+
+    // Encabezado del PDF
+    doc.setFillColor(28, 41, 51);
+    doc.rect(0, 0, 220, 30, 'F');
+
+    // Título centrado con texto blanco
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(28);
+    doc.text("Lista de Proveedores", doc.internal.pageSize.getWidth() / 2, 18, { align: "center" });
+
+    const columnas = ["ID", "Nombre", "Teléfono", "Empresa"];
+
+    const filas = proveedoresFiltrados.map((p) => [
+        p.id_prov,
+        p.nombre_proveedor,
+        p.telefono,
+        p.empresa,
+    ]);
+
+    // Marcador para mostrar el total de páginas
+    const totalPaginas = "{total_pages_count_string}";
+
+    // Configuración de la tabla
+    autoTable(doc, {
+        head: [columnas],
+        body: filas,
+        startY: 40,
+        theme: "grid",
+        styles: { fontSize: 10, cellPadding: 2 },
+        margin: { top: 20, left: 14, right: 14 },
+        tableWidth: "auto",
+        columnStyles: {
+            0: { cellWidth: 'auto' },
+            1: { cellWidth: 'auto' },
+            2: { cellWidth: 'auto' },
+            3: { cellWidth: 'auto' },
+        },
+        pageBreak: "auto",
+        rowPageBreak: "auto",
+
+        // Pie de página con número de página
+        didDrawPage: function () {
+            const alturaPagina = doc.internal.pageSize.getHeight();
+            const anchoPagina = doc.internal.pageSize.getWidth();
+            const numeroPagina = doc.internal.getNumberOfPages();
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            const piePagina = `Página ${numeroPagina} de ${totalPaginas}`;
+            doc.text(piePagina, anchoPagina / 2 + 15, alturaPagina - 10, { align: "center" });
+        },
+    });
+
+    // Inyectar total real de páginas
+    if (typeof doc.putTotalPages === 'function') {
+        doc.putTotalPages(totalPaginas);
+    }
+
+    // Guardar con nombre dinámico
+    const fecha = new Date();
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+    const nombreArchivo = `proveedores_${dia}${mes}${anio}.pdf`;
+
+    doc.save(nombreArchivo);
+};
+
+
+// 📄 Generar PDF con el detalle de un solo proveedor
+const generarPDFDetalleProveedor = (proveedor) => {
+  const doc = new jsPDF();
+  const anchoPagina = doc.internal.pageSize.getWidth();
+
+  // Encabezado
+  doc.setFillColor(28, 41, 51);
+  doc.rect(0, 0, 220, 30, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.text(proveedor.nombre_proveedor, anchoPagina / 2, 18, { align: "center" });
+
+  // Detalles
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(14);
+  let posicionY = 50;
+
+  doc.text(`Teléfono: ${proveedor.telefono}`, anchoPagina / 2, posicionY, { align: "center" });
+  doc.text(`Empresa: ${proveedor.empresa}`, anchoPagina / 2, posicionY + 10, { align: "center" });
+
+  doc.save(`${proveedor.nombre_proveedor}.pdf`);
+};
+
+// 📊 Exportar proveedores a archivo Excel
+const exportarExcelProveedores = () => {
+  const datos = proveedoresFiltrados.map((p) => ({
+    ID: p.id_prov,
+    Nombre: p.nombre_proveedor,
+    Teléfono: p.telefono,
+    Empresa: p.empresa,
+  }));
+
+  const hoja = XLSX.utils.json_to_sheet(datos);
+  const libro = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(libro, hoja, "Proveedores");
+
+  const excelBuffer = XLSX.write(libro, { bookType: 'xlsx', type: 'array' });
+
+  const fecha = new Date();
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const anio = fecha.getFullYear();
+  const nombreArchivo = `proveedores_${dia}${mes}${anio}.xlsx`;
+
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(blob, nombreArchivo);
+};
+
   return (
     <>
       <Container className="mt-5">
@@ -209,8 +333,30 @@ const Proveedores = () => {
               manejarCambioBusqueda={manejarCambioBusqueda}
             />
           </Col>
-        </Row>
 
+   <Col lg={3} md={4} sm={4} xs={5}>
+          <Button
+            className="mb-3"
+            onClick={() => generarPDFProveedores()}
+            variant="secondary"
+            style={{ width: "100%" }}
+          >
+            Generar reporte PDF
+          </Button>
+        </Col>
+
+        <Col lg={3} md={4} sm={4} xs={5}>
+        <Button
+          className="mb-3"
+          onClick={() => exportarExcelProveedores()}
+          variant="secondary"
+          style={{ width: "100%" }}
+        >
+          Generar Excel
+        </Button>
+      </Col>
+
+        </Row>
         <br />
         <br />
 
@@ -224,6 +370,7 @@ const Proveedores = () => {
           establecerPaginaActual={establecerPaginaActual}
           abrirModalEliminacion={abrirModalEliminacion}
           abrirModalEdicion={abrirModalEdicion}
+          generarPDFDetalleProveedor={generarPDFDetalleProveedor}
         />
 
         <ModalRegistroProveedor

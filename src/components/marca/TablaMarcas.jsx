@@ -12,7 +12,8 @@ const TablaMarcas = ({
   paginaActual,
   establecerPaginaActual,
   abrirModalEliminacion,
-  abrirModalEdicion
+  abrirModalEdicion, 
+  generarPDFDetalleMarca
 }) => {
   if (cargando) {
     return <div>Cargando marcas...</div>;
@@ -37,6 +38,20 @@ const TablaMarcas = ({
               <td>{marca.id_marca}</td>
               <td>{marca.marca}</td>
               <td>
+               <Button
+                      size="sm"
+                      variant="outline-secondary"
+                      className="me-2"
+                      onClick={() => generarPDFDetalleMarca(marca)}
+                       >
+                      <i className="bi bi-filetype-pdf"></i>
+                    </Button>
+                              
+
+
+
+
+
                 <Button
                   variant="outline-danger"
                   size="sm"

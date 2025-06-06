@@ -366,7 +366,7 @@ const generarPDFProductos = () => {
             // Guardar el documento PDF
             doc.save(nombreArchivo);
 
-            };
+};
 
         const generarPDFDetalleProducto = (producto) => {
         const pdf = new jsPDF();
@@ -435,6 +435,7 @@ const generarPDFProductos = () => {
     const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
     saveAs(blob, nombreArchivo);
 };
+
   return (
     <>
       <Container className="mt-5">

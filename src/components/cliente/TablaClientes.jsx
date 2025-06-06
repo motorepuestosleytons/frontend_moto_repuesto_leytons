@@ -12,7 +12,9 @@ const TablaClientes = ({
   paginaActual,
   establecerPaginaActual,
   abrirModalEliminacion,
-  abrirModalEdicion
+  abrirModalEdicion,
+  generarPDFDetalleCliente
+
 }) => {
   if (cargando) {
     return <div>Cargando clientes...</div>;
@@ -43,6 +45,17 @@ const TablaClientes = ({
               <td>{cliente.apellido}</td>
               <td>{cliente.telefono}</td>
               <td>
+               
+
+               <Button
+                  size="sm"
+                variant="outline-secondary"
+                className="me-2"
+                onClick={() => generarPDFDetalleCliente(cliente)}
+                  >
+                  <i className="bi bi-filetype-pdf"></i>
+                  </Button>
+
                 <Button
                   variant="outline-danger"
                   size="sm"

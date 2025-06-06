@@ -12,7 +12,8 @@ const TablaProveedor = ({
   paginaActual,
   establecerPaginaActual,
   abrirModalEliminacion,
-  abrirModalEdicion
+  abrirModalEdicion,
+  generarPDFDetalleProveedor
 }) => {
   if (cargando) {
     return <div>Cargando proveedores...</div>;
@@ -41,6 +42,16 @@ const TablaProveedor = ({
               <td>{proveedor.telefono}</td>
               <td>{proveedor.empresa}</td>
               <td>
+
+            <Button
+                size="sm"
+                variant="outline-secondary"
+                className="me-2"
+                onClick={() => generarPDFDetalleProveedor(proveedor)}
+                >
+                <i className="bi bi-filetype-pdf"></i>
+              </Button>
+
                 <Button
                   variant="outline-danger"
                   size="sm"

@@ -12,6 +12,32 @@ const ModalRegistroProducto = ({
 }) => {
   const [errores, setErrores] = useState({});
 
+
+  const validarNumeros = (e) => {
+    const charCode = e.which || e.keyCode;
+    if (
+      !(charCode >= 48 && charCode <= 57) && // Numbers 0-9
+      charCode !== 8 && // Backspace
+      charCode !== 46 && // Delete
+      charCode !== 9 // Tab
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  // Form validation to enable/disable submit button
+  const validacionFormulario = () => {
+    return (
+      nuevoProducto.nombre_.trim() !== "" &&
+      nuevoProducto.modelo.trim() !== "" &&
+      nuevoProducto.precio_venta.trim() !== "" &&
+      nuevoProducto.precio_compra.trim() !== "" &&
+      nuevoProducto.stock.trim() !== ""
+
+    );
+
+  };
+
   const validarFormulario = () => {
     const nuevosErrores = {};
 
@@ -119,6 +145,7 @@ const ModalRegistroProducto = ({
               name="precio_venta"
               value={nuevoProducto.precio_venta}
               onChange={manejarCambioInput}
+              onKeyDown={validarNumeros}
               placeholder="Ingresa el precio de venta"
               step="0.01"
               min="0.01"
@@ -137,6 +164,7 @@ const ModalRegistroProducto = ({
               name="precio_compra"
               value={nuevoProducto.precio_compra}
               onChange={manejarCambioInput}
+              onKeyDown={validarNumeros}
               placeholder="Ingresa el precio de compra"
               step="0.01"
               min="0.01"
@@ -155,6 +183,7 @@ const ModalRegistroProducto = ({
               name="stock"
               value={nuevoProducto.stock}
               onChange={manejarCambioInput}
+              onKeyDown={validarNumeros}
               placeholder="Ingresa la cantidad en stock"
               min="0"
               step="1"
@@ -218,7 +247,8 @@ const ModalRegistroProducto = ({
         <Button variant="secondary" onClick={() => setMostrarModal(false)}>
           Cancelar
         </Button>
-        <Button variant="primary" onClick={manejarEnvio}>
+        <Button variant="primary" onClick={manejarEnvio}
+        disabled={!validacionFormulario()}>
           Guardar Producto
         </Button>
       </Modal.Footer>

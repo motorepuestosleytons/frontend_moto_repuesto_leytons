@@ -1,9 +1,11 @@
 import React from "react";
 import { Col, Card, Badge, Stack } from 'react-bootstrap';
+import { JackInTheBox } from "react-awesome-reveal";
 
 const Tarjeta = ({ indice, nombre_, modelo, precio_venta, stock, id_marca, imagen }) => {
   return (
     <Col lg={3} className="mt-3">
+      <JackInTheBox cascade triggerOnce delay={10} duration={600}>
       <Card border="">
         <Card.Img
           variant="top"
@@ -28,6 +30,7 @@ const Tarjeta = ({ indice, nombre_, modelo, precio_venta, stock, id_marca, image
           </Stack>
         </Card.Body>
       </Card>
+      </JackInTheBox>
     </Col>
   );
 };

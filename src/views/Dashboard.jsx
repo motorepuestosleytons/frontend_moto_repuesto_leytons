@@ -11,7 +11,7 @@ className="mt-5">
 title="estaditicas"
 width="100%"
 height="100%"
-src="https://app.powerbi.com/view?r=eyJrIjoiNWI4ZTQyYWMtYmY5YS00YTdmLTk3ODMtNjBmMzA3MmM3ODgzIiwidCI6ImU0NzY0NmZlLWRhMjctNDUxOC04NDM2LTVmOGIxNThiYTEyNyIsImMiOjR9"
+src="https://app.powerbi.com/view?r=eyJrIjoiNWJhNTQxMTQtOTVlNi00OWY1LWE2MTgtMjJlNTBjOWQxY2Y2IiwidCI6ImU0NzY0NmZlLWRhMjctNDUxOC04NDM2LTVmOGIxNThiYTEyNyIsImMiOjR9"
 allowFullScreen="true"
 ></iframe>
 </Card>

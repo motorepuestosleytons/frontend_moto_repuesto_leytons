@@ -1,6 +1,6 @@
 .color-navbar {
-background: #2A7B9B;
-background: linear-gradient(257deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 78%, rgba(237, 221, 83, 1) 100%);
+  background-color: #f1ff00 !important;
+  background-image: linear-gradient(270deg, #f1ff00 0%, #2BD2FF 52%, #59ff2b 80%);
   
 }
 
@@ -9,7 +9,7 @@ background: linear-gradient(257deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133,
 }
 
 .titulo-blanco .dropdown-toggle {
-  color: white !important;
+  color: rgb(5, 5, 5) !important;
   font-weight: bold;
 }
 
@@ -17,6 +17,12 @@ background: linear-gradient(257deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133,
   color: rgb(0, 0, 0) !important;
   font-weight: bold;
 }
+ 
+.text-black {
+  color: black !important;
+}
+
+
 
 /*////////////////////////////////////////////////////////*/
 

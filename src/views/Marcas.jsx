@@ -298,6 +298,7 @@ const Marcas = () => {
               onClick={() => setMostrarModal(true)}
               style={{ width: "100%" }}
             >
+              <i className="bi 	bi-pencil-square me-2"></i>
               Nueva Marca
             </Button>
           </Col>
@@ -314,7 +315,8 @@ const Marcas = () => {
               variant="secondary"
               style={{ width: "100%" }}
             >
-              Generar reporte PDF
+              <i className="bi bi-file-earmark-text me-2"></i>
+              Generar reporte 
             </Button>
           </Col>
           <Col lg={3} md={4} sm={4} xs={5}>
@@ -324,6 +326,7 @@ const Marcas = () => {
               variant="secondary"
               style={{ width: "100%" }}
             >
+               <i className="bi bi-file-earmark-excel me-2"></i>
               Generar Excel
             </Button>
           </Col>

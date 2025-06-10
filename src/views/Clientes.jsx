@@ -338,6 +338,7 @@ const Clientes = () => {
               onClick={() => setMostrarModal(true)}
               style={{ width: "100%" }}
             >
+               <i className="bi bi-person-plus me-2"></i>
               Nuevo Cliente
             </Button>
           </Col>
@@ -354,7 +355,8 @@ const Clientes = () => {
               variant="secondary"
               style={{ width: "100%" }}
             >
-              Generar reporte PDF
+              <i className="bi bi-file-earmark-text me-2"></i>
+              Generar Reporte
             </Button>
           </Col>
         <Col lg={3} md={4} sm={4} xs={5}>
@@ -364,6 +366,7 @@ const Clientes = () => {
               variant="secondary"
               style={{ width: "100%" }}
             >
+              <i className="bi bi-file-earmark-excel me-2"></i>
               Generar Excel
             </Button>
           </Col>

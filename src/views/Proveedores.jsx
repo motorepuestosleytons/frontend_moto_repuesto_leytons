@@ -318,12 +318,13 @@ const exportarExcelProveedores = () => {
         <h4>Proveedores</h4>
 
         <Row>
-          <Col lg={2} md={4} sm={4} xs={5}>
+          <Col lg={3} md={4} sm={4} xs={5}>
             <Button
               variant="primary"
               onClick={() => setMostrarModal(true)}
               style={{ width: "100%" }}
             >
+              <i className="bi bi-person-plus me-2"></i>
               Nuevo Proveedor
             </Button>
           </Col>
@@ -341,7 +342,8 @@ const exportarExcelProveedores = () => {
             variant="secondary"
             style={{ width: "100%" }}
           >
-            Generar reporte PDF
+            <i className="bi bi-file-earmark-text me-2"></i>
+            Generar reporte 
           </Button>
         </Col>
 
@@ -352,6 +354,7 @@ const exportarExcelProveedores = () => {
           variant="secondary"
           style={{ width: "100%" }}
         >
+           <i className="bi bi-file-earmark-excel me-2"></i>
           Generar Excel
         </Button>
       </Col>

@@ -11,21 +11,21 @@ const Proposito = () => {
         <Col sm={12} lg={4} className="text-center">
           <i className="bi bi-bullseye" style={{ fontSize: "2rem", color: "#dc3545" }}></i>
           <h5>Objetivos</h5>
-          <p>Promover en Ferretería Selva el uso de herramientas y materiales de calidad, destacar la importancia de los productos locales y fomentar prácticas sostenibles en la construcción y mantenimiento.</p>
+          <p>Promover en Moto Repuestos Leyton el uso de repuestos y accesorios de calidad para motocicletas, facilitar el acceso a productos mediante una plataforma digital, y optimizar la gestión del inventario y atención al cliente a través de herramientas tecnológicas modernas.</p>
         </Col>
 
         {/* Misión */}
         <Col sm={12} lg={4} className="text-center">
           <i className="bi bi-flag-fill" style={{ fontSize: "2rem", color: "#0d6efd" }}></i>
           <h5>Misión</h5>
-          <p>Ofrecer y promover en Ferretería Selva soluciones integrales de ferretería en Chontales, brindando productos de calidad que inspiren confianza y satisfacción en cada proyecto.</p>
+          <p>Ofrecer en Moto Repuestos Leyton soluciones confiables en repuestos para motocicletas, integrando una página web que agilice la búsqueda, compra y asesoría técnica, garantizando satisfacción, rapidez y confianza a nuestros clientes.</p>
         </Col>
 
         {/* Visión */}
         <Col sm={12} lg={4} className="text-center">
           <i className="bi bi-eye-fill" style={{ fontSize: "2rem", color: "#198754" }}></i>
           <h5>Visión</h5>
-          <p>Ser en Ferretería Selva el principal referente en ferretería en Chontales, inspirando a nuestros clientes a construir y mantener sus espacios con productos confiables y duraderos.</p>
+          <p>Ser en Moto Repuestos Leyton un referente digital en la venta de repuestos para motos en la región, destacándonos por nuestra atención personalizada, variedad de productos y plataforma web eficiente, innovadora y orientada al cliente.</p>
         </Col>
 
       </Row>

@@ -439,20 +439,19 @@ const generarPDFProductos = () => {
   return (
     <>
       <Container className="mt-5">
-        <br />
-        <h4>Productos</h4>
-
+   <h4>Productos</h4>
         <Row>
-          <Col lg={2} md={2} sm={3} xs={3}>
+          <Col lg={2} md={3} sm={5} xs={5}>
             <Button
               variant="primary"
               onClick={() => setMostrarModal(true)}
               style={{ width: "100%" }}
             >
+              <i className="bi 	bi-pencil-square me-2"></i>
               Nuevo Producto
             </Button>
           </Col>
-          <Col lg={4} md={4} sm={4} xs={4}>
+          <Col lg={4} md={8} sm={8} xs={7}>
             <CuadroBusquedas
               textoBusqueda={textoBusqueda}
               manejarCambioBusqueda={manejarCambioBusqueda}
@@ -466,7 +465,8 @@ const generarPDFProductos = () => {
             variant="secondary"
             style={{ width: "100%" }}
           >
-            Generar reporte PDF
+            <i className="bi bi-file-earmark-text me-2"></i>
+            Generar reporte 
           </Button>
         </Col>
 
@@ -477,12 +477,14 @@ const generarPDFProductos = () => {
           variant="secondary"
           style={{ width: "100%" }}
         >
+           <i className="bi bi-file-earmark-excel me-2"></i>
           Generar Excel
         </Button>
       </Col>
       
         </Row>
 
+          
         <TablaProductos
           productos={productosPaginados}
           cargando={cargando}

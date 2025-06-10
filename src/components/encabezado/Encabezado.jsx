@@ -28,11 +28,11 @@ const Encabezado = () => {
   };
 
   return (
-    <Navbar expand="sm" fixed="flex" className="color-navbar">
+    <Navbar expand="sm" fixed=" flex" className="color-navbar">
       <Container>
         <Navbar.Brand
           onClick={() => navegarA("/inicio")}
-          className="text-white"
+          className="text-black"
           style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
         >
           <img alt="" src={logo} width="50" height="50" className="d-inline-block align-top" />{" "}
@@ -54,7 +54,7 @@ const Encabezado = () => {
           <Offcanvas.Header closeButton>
             <Offcanvas.Title
               id="offcanvasNavbarLabel-expand-sm"
-              className={estaColapsado ? "color-texto-marca" : "text-white"}
+              className={estaColapsado ? "color-texto-marca" : "text-black"}
             >
               Menú
             </Offcanvas.Title>
@@ -66,7 +66,7 @@ const Encabezado = () => {
       <>
         <Nav.Link
           onClick={() => navegarA("/inicio")}
-          className={estaColapsado ? "text-black" : "text-white"}
+          className={estaColapsado ? "text-black" : "text-black"}
         >
           {estaColapsado && <i className="bi-house-door-fill me-2"></i>}
           <strong>Inicio</strong>
@@ -74,7 +74,7 @@ const Encabezado = () => {
 
         <Nav.Link
           onClick={() => navegarA("/ventas")}
-          className={estaColapsado ? "text-black" : "text-white"}
+          className={estaColapsado ? "text-black" : "text-black"}
         >
           {estaColapsado && <i className="bi-cash-coin me-2"></i>}
           <strong>Ventas</strong>
@@ -82,15 +82,16 @@ const Encabezado = () => {
 
         <Nav.Link
           onClick={() => navegarA("/compras")}
-          className={estaColapsado ? "text-black" : "text-white"}
+          className={estaColapsado ? "text-black" : "text-black"}
         >
           {estaColapsado && <i className="bi-cart-check me-2"></i>}
+          
           <strong>Compras</strong>
         </Nav.Link>
 
         <Nav.Link
           onClick={() => navegarA("/Estadisticas")}
-          className={estaColapsado ? "text-black" : "text-white"}
+          className={estaColapsado ? "text-black" : "text-black"}
         >
           {estaColapsado && <i className="bi-graph-up me-2"></i>}
           <strong>Estadísticas</strong>
@@ -98,7 +99,7 @@ const Encabezado = () => {
 
         <Nav.Link
           onClick={() => navegarA("/Dashboard")}
-          className={estaColapsado ? "text-black" : "text-white"}
+          className={estaColapsado ? "text-black" : "text-black"}
         >
           {estaColapsado && <i className="bi-speedometer2 me-2"></i>}
           <strong>Dashboard</strong>
@@ -160,7 +161,7 @@ const Encabezado = () => {
 
         <Nav.Link
           onClick={cerrarSesion}
-          className={estaColapsado ? "text-black" : "text-white"}
+          className={estaColapsado ? "text-black" : "text-black"}
         >
           <i className="bi-box-arrow-right me-2"></i>
           <strong>Cerrar Sesión</strong>
@@ -169,7 +170,7 @@ const Encabezado = () => {
     ) : (
       <Nav.Link
         onClick={() => navegarA("/")}
-        className={estaColapsado ? "text-black" : "text-white"}
+        className={estaColapsado ? "text-black" : "text-black"}
       >
         <i className="bi-box-arrow-in-right me-2"></i>
         <strong>Iniciar Sesión</strong>

@@ -125,6 +125,7 @@ const cargaVentasPorMes = async () => {
             className="mb-4"
             onClick={() => setMostrarChatModal(true)}
             >
+              <i className="bi bi-robot me-2"></i>
             Consultar con IA
               </Button>
 

@@ -327,7 +327,7 @@ const exportarExcelProveedores = () => {
               Nuevo Proveedor
             </Button>
           </Col>
-          <Col lg={5} md={8} sm={8} xs={7}>
+          <Col lg={3} md={8} sm={8} xs={7}>
             <CuadroBusquedas
               textoBusqueda={textoBusqueda}
               manejarCambioBusqueda={manejarCambioBusqueda}
@@ -357,8 +357,6 @@ const exportarExcelProveedores = () => {
       </Col>
 
         </Row>
-        <br />
-        <br />
 
         <TablaProveedor
           proveedores={proveedoresPaginados}

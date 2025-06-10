@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import NavDropdown from "react-bootstrap/NavDropdown"
+import logo from "../../assets/Logo_Moto_Repuestos.png"; // Importación del logo de la ferretería
 import "../../App.css";
 
 const Encabezado = () => {
@@ -27,19 +28,14 @@ const Encabezado = () => {
   };
 
   return (
-    <Navbar expand="sm" fixed="top" className="color-navbar">
+    <Navbar expand="sm" fixed="flex" className="color-navbar">
       <Container>
         <Navbar.Brand
           onClick={() => navegarA("/inicio")}
           className="text-white"
           style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
         >
-          <img
-            alt="Moto Repuestos Leyton"
-            src="/Logo_Moto_Repuestos.png"
-            style={{ height: "35px", width: "auto", marginRight: "10px" }}
-            className="d-inline-block align-top"
-          />
+          <img alt="" src={logo} width="50" height="50" className="d-inline-block align-top" />{" "}
           <strong>Moto Repuestos Leyton</strong>
         </Navbar.Brand>
 

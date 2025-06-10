@@ -292,7 +292,7 @@ const Marcas = () => {
         <h4>Marcas</h4>
 
         <Row>
-          <Col lg={2} md={2} sm={3} xs={3}>
+          <Col lg={2} md={4} sm={4} xs={5}>
             <Button
               variant="primary"
               onClick={() => setMostrarModal(true)}
@@ -301,7 +301,7 @@ const Marcas = () => {
               Nueva Marca
             </Button>
           </Col>
-          <Col lg={4} md={4} sm={4} xs={4}>
+          <Col lg={3} md={8} sm={8} xs={7}>
             <CuadroBusquedas
               textoBusqueda={textoBusqueda}
               manejarCambioBusqueda={manejarCambioBusqueda}

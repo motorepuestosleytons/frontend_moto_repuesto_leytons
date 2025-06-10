@@ -11,7 +11,7 @@ const CatalogoProductos = () => {
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState('');
   const [paginaActual, setPaginaActual] = useState(1);
-  const elementosPorPagina = 16;
+  const elementosPorPagina = 12;
 
   // Obtener productos
   const obtenerProductos = async () => {
@@ -61,15 +61,14 @@ const CatalogoProductos = () => {
       <h4>Catálogo de Productos</h4>
       <br />
       <Row>
-        <Col lg={2} md={4} sm={4} xs={5}></Col>
-        <Col lg={6} md={8} sm={8} xs={7}>
+        <Col lg={5} md={4} sm={6} xs={12}>
+        
           <CuadroBusquedas
             textoBusqueda={textoBusqueda}
             manejarCambioBusqueda={manejarCambioBusqueda}
           />
         </Col>
       </Row>
-      <br /><br />
       <Row>
         {productosPaginados.map((producto, indice) => (
           <Tarjeta

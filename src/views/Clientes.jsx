@@ -27,7 +27,7 @@ const Clientes = () => {
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
   const [paginaActual, establecerPaginaActual] = useState(1);
-  const elementosPorPagina = 3;
+  const elementosPorPagina = 10;
   const [clienteEditado, setClienteEditado] = useState(null);
   const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
 
@@ -329,11 +329,10 @@ const Clientes = () => {
   return (
     <>
       <Container className="mt-5">
-        <br />
         <h4>Clientes</h4>
 
         <Row>
-          <Col lg={2} md={2} sm={3} xs={3}>
+          <Col lg={2} md={4} sm={4} xs={5}>
             <Button
               variant="primary"
               onClick={() => setMostrarModal(true)}
@@ -342,13 +341,13 @@ const Clientes = () => {
               Nuevo Cliente
             </Button>
           </Col>
-          <Col lg={4} md={4} sm={4} xs={4}>
+          <Col lg={5} md={8} sm={8} xs={7}>
             <CuadroBusquedas
               textoBusqueda={textoBusqueda}
               manejarCambioBusqueda={manejarCambioBusqueda}
             />
           </Col>
-          <Col lg={3} md={4} sm={4} xs={5}>
+         <Col lg={3} md={4} sm={4} xs={5}>
             <Button
               className="mb-3"
               onClick={() => generarPDFClientes()}
@@ -358,7 +357,7 @@ const Clientes = () => {
               Generar reporte PDF
             </Button>
           </Col>
-          <Col lg={3} md={4} sm={4} xs={5}>
+        <Col lg={3} md={4} sm={4} xs={5}>
             <Button
               className="mb-3"
               onClick={() => exportarExcelClientes()}
@@ -370,10 +369,8 @@ const Clientes = () => {
           </Col>
         </Row>
 
-        <br />
-        <br />
-
         <TablaClientes
+
           clientes={clientesPaginados}
           cargando={cargando}
           error={errorCarga}

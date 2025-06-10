@@ -30,7 +30,6 @@ const Inicio = () => {
      <Image style={{ width: "100%"}} src={Leyton} fluid rounded/>
      <Proposito />
       <p>"Tu moto en marcha, con repuestos de confianza"</p>
-      <button className="btn btn-danger" onClick={cerrarSesion}>Cerrar Sesión</button>
     </Container>
   );
 };
